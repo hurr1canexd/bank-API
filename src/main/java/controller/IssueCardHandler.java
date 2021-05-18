@@ -1,31 +1,43 @@
 package controller;
 
-import com.sun.net.httpserver.Headers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import model.Card;
+import service.CardService;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 
 public class IssueCardHandler implements HttpHandler {
+    CardService cardService = new CardService();
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // TODO
-        StringBuilder builder = new StringBuilder();
+        // TODO: 18.05.2021 делегировать логику в другой класс?
+        // TODO: 18.05.2021 генерировать cvc код?
 
-        builder.append("<h1>URI: ").append(exchange.getRequestURI()).append("</h1>");
+        String stringRequestBody = getStringRequestBody(exchange);
 
-        Headers headers = exchange.getRequestHeaders();
-        for (String header : headers.keySet()) {
-            builder.append("<p>").append(header).append("=")
-                    .append(headers.getFirst(header)).append("</p>");
+        // Получаем java модель из json
+        ObjectMapper mapper = new ObjectMapper();
+        Card card = mapper.readValue(stringRequestBody, Card.class);
+        System.out.println(card);
+    }
+
+    private String getStringRequestBody(HttpExchange exchange) {
+        StringBuilder buf = new StringBuilder(512);
+        try (InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr);) {
+            int b;
+            while ((b = br.read()) != -1) {
+                buf.append((char) b);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        byte[] bytes = builder.toString().getBytes();
-        exchange.sendResponseHeaders(200, bytes.length);
-
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        return buf.toString();
     }
 }

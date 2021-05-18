@@ -1,15 +1,20 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Account {
-    private final int id;
+    private static final AtomicInteger count = new AtomicInteger(0);
+    private final @JsonProperty("id") int id;
     private BigDecimal balance;
     private int clientId;
 
-    public Account(int id, BigDecimal balance, int clientId) {
-        this.id = id;
+    public Account(@JsonProperty("balance") BigDecimal balance,
+                   @JsonProperty("clientId") int clientId) {
         this.balance = balance;
         this.clientId = clientId;
+        this.id = count.incrementAndGet();
     }
 }

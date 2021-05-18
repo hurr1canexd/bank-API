@@ -8,6 +8,6 @@ import java.io.IOException;
 public class CheckBalanceHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        System.out.println(exchange.getRequestURI());
+        // TODO
     }
 }
