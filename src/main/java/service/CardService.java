@@ -1,11 +1,10 @@
 package service;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import model.Card;
 
-public class CardService {
-//    public Card getCardFromJson() {
-//    }
-    public void insertInDatabase(Card card) {
-        // TODO
-    }
+public interface CardService {
+    public Card getCardFromJson();
+    public void insertCardInDatabase(Card card);
+    public ArrayNode getCards();
 }

@@ -7,26 +7,38 @@ import model.Card;
 import service.CardService;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
 public class IssueCardHandler implements HttpHandler {
-    CardService cardService = new CardService();
+    private final CardService cardService;
+
+    public IssueCardHandler(CardService cardService) {
+        this.cardService = cardService;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // TODO: 18.05.2021 делегировать логику в другой класс?
         // TODO: 18.05.2021 генерировать cvc код?
+        // TODO: 19.05.2021 отдать сервису маппинг?
 
+        // Get String JSON
         String stringRequestBody = getStringRequestBody(exchange);
 
-        // Получаем java модель из json
-        ObjectMapper mapper = new ObjectMapper();
-        Card card = mapper.readValue(stringRequestBody, Card.class);
+        // Get java model from JSON
+        Card card = new ObjectMapper().readValue(stringRequestBody, Card.class);
         System.out.println(card);
+
+        cardService.insertCardInDatabase(card);
+
+        // Send response
+        OutputStream os = exchange.getResponseBody();
+        byte[] response = "Card added.".getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(200, response.length);
+        os.write(response);
+        os.close();
     }
 
-    private String getStringRequestBody(HttpExchange exchange) {
+    private static String getStringRequestBody(HttpExchange exchange) {
         StringBuilder buf = new StringBuilder(512);
         try (InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(isr);) {

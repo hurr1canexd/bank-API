@@ -9,8 +9,9 @@ CREATE TABLE Client
 CREATE TABLE Account
 (
     id       INT IDENTITY (1,1) PRIMARY KEY,
+    number   VARCHAR(20) NOT NULL,
     balance  DECIMAL, -- -> decimal?
-    clientId INT NOT NULL,
+    clientId INT         NOT NULL,
     FOREIGN KEY (clientId) REFERENCES Client (id)
 );
 
