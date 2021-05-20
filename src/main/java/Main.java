@@ -1,12 +1,13 @@
 import com.sun.net.httpserver.HttpServer;
 import db.DAO.*;
 import controller.*;
+import db.DBInitializer;
 import service.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class MyHttpServer {
+public class Main {
     public static void main(String[] args) throws IOException {
         ServerStarter.start();
     }
@@ -14,9 +15,9 @@ public class MyHttpServer {
 
     public static class ServerStarter {
         public static void start() throws IOException {
+            DBInitializer.init();
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-            ClientService clientService = new ClientServiceImpl();
             AccountService accountService = new AccountServiceImpl(new AccountDAOImpl());
             CardService cardService = new CardServiceImpl(new CardDAOImpl());
 
