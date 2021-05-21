@@ -7,7 +7,6 @@ import service.AccountService;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 
 public class CheckBalanceHandler implements HttpHandler {
     AccountService accountService;
@@ -22,10 +21,10 @@ public class CheckBalanceHandler implements HttpHandler {
         String accountNumber = exchange.getRequestURI().getQuery().split("=")[1];
 
         BigDecimal balance = accountService.getAccountBalance(accountNumber);
-//        System.out.println(balance);
 
         // Send response
         OutputStream os = exchange.getResponseBody();
+        // TODO: 20.05.2021 поправить костыль через строку 
 //        byte[] response = balance.unscaledValue().toByteArray();
         byte[] response = balance.toString().getBytes();
         exchange.sendResponseHeaders(200, response.length);

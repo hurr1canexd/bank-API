@@ -3,7 +3,6 @@ package service;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import db.DAO.CardDAO;
 import model.Card;
-import org.json.JSONArray;
 
 public class CardServiceImpl implements CardService {
     private final CardDAO cardDAO;

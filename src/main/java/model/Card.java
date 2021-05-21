@@ -13,7 +13,7 @@ public class Card {
     private final String year;
     private final String code;
     private BigDecimal balance;
-    private @JsonProperty("status") String status; // [ждет активации, активна, закрыта] TODO: 19.05.2021 ENUM class
+    private @JsonProperty("status") int status; // [ждет активации, активна, закрыта] TODO: 19.05.2021 ENUM class
     private int accountId;
 
 
@@ -28,7 +28,7 @@ public class Card {
         this.year = year;
         this.code = code;
         this.balance = balance;
-        this.status = "new";
+        this.status = 0;
         this.accountId = accountId;
         this.id = counter.incrementAndGet();
     }
@@ -57,25 +57,11 @@ public class Card {
         return balance;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
     public int getAccountId() {
         return accountId;
-    }
-
-    @Override
-    public String toString() {
-        return "Card{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", month='" + month + '\'' +
-                ", year='" + year + '\'' +
-                ", code='" + code + '\'' +
-                ", balance=" + balance +
-                ", status='" + status + '\'' +
-                ", accountId=" + accountId +
-                '}';
     }
 }
