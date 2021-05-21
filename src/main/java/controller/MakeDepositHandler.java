@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
 public class MakeDepositHandler implements HttpHandler {
-    AccountService accountService;
+    private final AccountService accountService;
 
     public MakeDepositHandler(AccountService accountService) {
         this.accountService = accountService;
@@ -22,10 +22,7 @@ public class MakeDepositHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // Get String JSON
-        String stringRequestBody = getStringRequestBody(exchange);
-
-        ObjectNode node = new ObjectMapper().readValue(stringRequestBody, ObjectNode.class);
+        ObjectNode node = new ObjectMapper().readValue(exchange.getRequestBody(), ObjectNode.class);
         String accountNumber = node.get("number").asText();
         BigDecimal sum = node.get("sum").decimalValue();
 
@@ -38,20 +35,5 @@ public class MakeDepositHandler implements HttpHandler {
         os.write(response);
         os.close();
 
-    }
-
-    private static String getStringRequestBody(HttpExchange exchange) {
-        StringBuilder buf = new StringBuilder(512);
-        try (InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
-             BufferedReader br = new BufferedReader(isr);) {
-            int b;
-            while ((b = br.read()) != -1) {
-                buf.append((char) b);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return buf.toString();
     }
 }
