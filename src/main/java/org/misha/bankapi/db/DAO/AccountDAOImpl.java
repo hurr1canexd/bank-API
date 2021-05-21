@@ -1,7 +1,6 @@
-package db.DAO;
+package org.misha.bankapi.db.DAO;
 
-import db.H2JDBCUtils;
-import org.h2.jdbc.JdbcSQLNonTransientException;
+import org.misha.bankapi.db.H2JDBCUtils;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

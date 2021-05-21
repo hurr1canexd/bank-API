@@ -1,4 +1,4 @@
-package db;
+package org.misha.bankapi.db;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

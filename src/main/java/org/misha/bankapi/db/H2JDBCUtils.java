@@ -1,4 +1,4 @@
-package db;
+package org.misha.bankapi.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

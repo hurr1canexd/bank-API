@@ -1,8 +1,8 @@
-package controller;
+package org.misha.bankapi.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import service.AccountService;
+import org.misha.bankapi.service.AccountService;
 
 import java.io.IOException;
 import java.math.BigDecimal;

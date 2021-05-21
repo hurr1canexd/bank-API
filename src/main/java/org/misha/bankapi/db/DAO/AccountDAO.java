@@ -1,4 +1,4 @@
-package db.DAO;
+package org.misha.bankapi.db.DAO;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

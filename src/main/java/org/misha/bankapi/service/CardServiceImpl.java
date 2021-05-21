@@ -1,8 +1,8 @@
-package service;
+package org.misha.bankapi.service;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import db.DAO.CardDAO;
-import model.Card;
+import org.misha.bankapi.db.DAO.CardDAO;
+import org.misha.bankapi.model.Card;
 
 import java.sql.SQLException;
 

@@ -1,4 +1,4 @@
-package model;
+package org.misha.bankapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

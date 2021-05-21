@@ -1,6 +1,6 @@
-package service;
+package org.misha.bankapi.service;
 
-import db.DAO.AccountDAO;
+import org.misha.bankapi.db.DAO.AccountDAO;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

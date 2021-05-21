@@ -1,4 +1,4 @@
-package controller;
+package org.misha.bankapi.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 

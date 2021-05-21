@@ -1,8 +1,20 @@
+package org.misha.bankapi;
+
 import com.sun.net.httpserver.HttpServer;
-import db.DAO.*;
-import controller.*;
-import db.DBInitializer;
-import service.*;
+import org.misha.bankapi.db.DAO.*;
+import org.misha.bankapi.controller.*;
+import org.misha.bankapi.db.DBInitializer;
+import org.misha.bankapi.service.*;
+import org.misha.bankapi.controller.CheckBalanceHandler;
+import org.misha.bankapi.controller.IssueCardHandler;
+import org.misha.bankapi.controller.MakeDepositHandler;
+import org.misha.bankapi.controller.ViewCardsHandler;
+import org.misha.bankapi.db.DAO.AccountDAOImpl;
+import org.misha.bankapi.db.DAO.CardDAOImpl;
+import org.misha.bankapi.service.AccountService;
+import org.misha.bankapi.service.AccountServiceImpl;
+import org.misha.bankapi.service.CardService;
+import org.misha.bankapi.service.CardServiceImpl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

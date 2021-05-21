@@ -1,4 +1,4 @@
-package service;
+package org.misha.bankapi.service;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

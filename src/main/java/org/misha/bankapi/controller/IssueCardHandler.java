@@ -1,23 +1,22 @@
-package controller;
+package org.misha.bankapi.controller;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import service.AccountService;
+import org.misha.bankapi.model.Card;
+import org.misha.bankapi.service.CardService;
 
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
-public class MakeDepositHandler implements HttpHandler, ResponseSender {
-    private final AccountService accountService;
+public class IssueCardHandler implements HttpHandler, ResponseSender {
+    private final CardService cardService;
 
-    public MakeDepositHandler(AccountService accountService) {
-        this.accountService = accountService;
+    public IssueCardHandler(CardService cardService) {
+        this.cardService = cardService;
     }
 
     @Override
@@ -25,11 +24,8 @@ public class MakeDepositHandler implements HttpHandler, ResponseSender {
         byte[] response;
 
         try {
-            ObjectNode node = new ObjectMapper().readValue(exchange.getRequestBody(), ObjectNode.class);
-            String accountNumber = node.get("number").asText();
-            BigDecimal sum = node.get("sum").decimalValue();
-
-            accountService.topUpAccountBalance(accountNumber, sum);
+            Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class); // Get java model from JSON
+            cardService.insertCardInDatabase(card);
         } catch (JsonMappingException | JsonParseException | SQLException ex) {
             response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
             sendResponse(exchange, 400, response);
@@ -37,7 +33,7 @@ public class MakeDepositHandler implements HttpHandler, ResponseSender {
         }
 
         // If all works correctly
-        response = "Balance replenished.".getBytes(StandardCharsets.UTF_8);
+        response = "Card added.".getBytes(StandardCharsets.UTF_8);
         sendResponse(exchange, 200, response);
     }
 }

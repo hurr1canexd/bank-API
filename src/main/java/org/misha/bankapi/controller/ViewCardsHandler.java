@@ -1,9 +1,9 @@
-package controller;
+package org.misha.bankapi.controller;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import service.CardService;
+import org.misha.bankapi.service.CardService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
