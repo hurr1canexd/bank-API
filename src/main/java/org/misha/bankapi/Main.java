@@ -21,13 +21,13 @@ import java.net.InetSocketAddress;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        DBInitializer.init();
         ServerStarter.start();
     }
 
 
     public static class ServerStarter {
         public static void start() throws IOException {
-            DBInitializer.init();
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             AccountService accountService = new AccountServiceImpl(new AccountDAOImpl());
