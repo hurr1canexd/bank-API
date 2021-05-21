@@ -10,19 +10,20 @@ import java.sql.*;
 
 public class CardDAOImpl implements CardDAO {
     @Override
-    public void create(Card card) {
+    public void create(Card card) throws SQLException {
         String query = "INSERT INTO CARD (number, month, year, code, accountid) " +
                 "VALUES ( ?, ?, ?, ?, ?);";
 
         try (Connection connection = H2JDBCUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, card.getNumber());
             statement.setString(2, card.getMonth());
             statement.setString(3, card.getYear());
             statement.setString(4, card.getCode());
             statement.setInt(5, card.getAccountId());
-
             statement.execute();
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -30,7 +31,7 @@ public class CardDAOImpl implements CardDAO {
     }
 
     @Override
-    public ArrayNode getCards() {
+    public ArrayNode getCards() throws SQLException {
         String query = "SELECT id, number from CARD;";
         ArrayNode arr = null;
 
@@ -46,11 +47,10 @@ public class CardDAOImpl implements CardDAO {
                 node.put("number", rs.getString("number"));
                 arr.add(node);
             }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-//        mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arr);
 
         return arr;
     }

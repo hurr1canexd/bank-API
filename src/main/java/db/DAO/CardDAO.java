@@ -3,8 +3,10 @@ package db.DAO;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import model.Card;
 
+import java.sql.SQLException;
+
 
 public interface CardDAO {
-    public void create(Card card);
-    public ArrayNode getCards();
+    void create(Card card) throws SQLException;
+    ArrayNode getCards() throws SQLException;
 }

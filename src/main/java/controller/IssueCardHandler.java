@@ -1,5 +1,6 @@
 package controller;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -25,7 +26,7 @@ public class IssueCardHandler implements HttpHandler, ResponseSender {
         try {
             Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class); // Get java model from JSON
             cardService.insertCardInDatabase(card);
-        } catch (JsonMappingException | SQLException ex) {
+        } catch (JsonMappingException | JsonParseException | SQLException ex) {
             response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
             sendResponse(exchange, 400, response);
             return;

@@ -1,6 +1,7 @@
 package db.DAO;
 
 import db.H2JDBCUtils;
+import org.h2.jdbc.JdbcSQLNonTransientException;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 
 public class AccountDAOImpl implements AccountDAO {
     @Override
-    public void addMoney(String number, BigDecimal sum) {
+    public void addMoney(String number, BigDecimal sum) throws SQLException {
         String query = "UPDATE ACCOUNT SET BALANCE = (BALANCE + ?) " +
                 "WHERE NUMBER = ?;";
 
@@ -27,7 +28,7 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
-    public BigDecimal getBalance(String accountNumber) {
+    public BigDecimal getBalance(String accountNumber) throws SQLException {
         String query = "SELECT BALANCE FROM ACCOUNT " +
                 "WHERE NUMBER = ?;";
 
@@ -38,8 +39,9 @@ public class AccountDAOImpl implements AccountDAO {
 
             statement.setString(1, accountNumber);
             ResultSet rs = statement.executeQuery();
-            rs.next();
-            balance = rs.getBigDecimal("balance");
+            if (rs.next()) {
+                balance = rs.getBigDecimal("balance");
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -47,6 +49,4 @@ public class AccountDAOImpl implements AccountDAO {
 
         return balance;
     }
-
-
 }

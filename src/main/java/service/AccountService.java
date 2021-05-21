@@ -1,8 +1,9 @@
 package service;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 
 public interface AccountService {
-    public void topUpAccountBalance(String accountNumber, BigDecimal sum);
-    public BigDecimal getAccountBalance(String accountNumber);
+    void topUpAccountBalance(String accountNumber, BigDecimal sum) throws SQLException;
+    BigDecimal getAccountBalance(String accountNumber) throws SQLException;
 }

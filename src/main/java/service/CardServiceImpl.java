@@ -4,26 +4,21 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import db.DAO.CardDAO;
 import model.Card;
 
+import java.sql.SQLException;
+
 public class CardServiceImpl implements CardService {
     private final CardDAO cardDAO;
 
     public CardServiceImpl(CardDAO cardDAO) {
         this.cardDAO = cardDAO;
     }
-
     @Override
-    public Card getCardFromJson() {
-        // TODO: 19.05.2021
-        return null;
-    }
-
-    @Override
-    public void insertCardInDatabase(Card card) {
+    public void insertCardInDatabase(Card card) throws SQLException {
         cardDAO.create(card);
     }
 
     @Override
-    public ArrayNode getCards() {
+    public ArrayNode getCards() throws SQLException {
         return cardDAO.getCards();
     }
 }
