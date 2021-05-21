@@ -1,5 +1,6 @@
 package controller;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -8,8 +9,9 @@ import service.CardService;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
-public class IssueCardHandler implements HttpHandler {
+public class IssueCardHandler implements HttpHandler, ResponseSender {
     private final CardService cardService;
 
     public IssueCardHandler(CardService cardService) {
@@ -18,18 +20,19 @@ public class IssueCardHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // TODO: 18.05.2021 генерировать cvc код?
+        byte[] response;
 
-        // Get java model from JSON
-        Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class);
+        try {
+            Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class); // Get java model from JSON
+            cardService.insertCardInDatabase(card);
+        } catch (JsonMappingException | SQLException ex) {
+            response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        }
 
-        cardService.insertCardInDatabase(card); // в try catch
-
-        // Send response
-        OutputStream os = exchange.getResponseBody();
-        byte[] response = "Card added.".getBytes(StandardCharsets.UTF_8);
-        exchange.sendResponseHeaders(200, response.length);
-        os.write(response);
-        os.close();
+        // If all works correctly
+        response = "Card added.".getBytes(StandardCharsets.UTF_8);
+        sendResponse(exchange, 200, response);
     }
 }

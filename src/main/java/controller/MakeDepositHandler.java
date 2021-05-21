@@ -6,14 +6,11 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import service.AccountService;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
-public class MakeDepositHandler implements HttpHandler {
+public class MakeDepositHandler implements HttpHandler, ResponseSender {
     private final AccountService accountService;
 
     public MakeDepositHandler(AccountService accountService) {
@@ -22,18 +19,16 @@ public class MakeDepositHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        byte[] response;
+
         ObjectNode node = new ObjectMapper().readValue(exchange.getRequestBody(), ObjectNode.class);
         String accountNumber = node.get("number").asText();
         BigDecimal sum = node.get("sum").decimalValue();
 
         accountService.topUpAccountBalance(accountNumber, sum);
 
-        // Send response
-        OutputStream os = exchange.getResponseBody();
-        byte[] response = "Balance replenished.".getBytes(StandardCharsets.UTF_8);
-        exchange.sendResponseHeaders(200, response.length);
-        os.write(response);
-        os.close();
-
+        // If all works correctly
+        response = "Balance replenished.".getBytes(StandardCharsets.UTF_8);
+        sendResponse(exchange, 200, response);
     }
 }
