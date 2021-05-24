@@ -14,7 +14,7 @@ CREATE TABLE Account
     clientId INT         NOT NULL,
     FOREIGN KEY (clientId) REFERENCES Client (id)
 );
-
+CREATE UNIQUE index account_number_UINDEX ON Account (number);
 
 CREATE TABLE Card
 (
@@ -28,3 +28,4 @@ CREATE TABLE Card
     accountId INT         NOT NULL,
     FOREIGN KEY (accountId) REFERENCES Account (id)
 );
+CREATE UNIQUE index card_number_UINDEX ON Card (number);
