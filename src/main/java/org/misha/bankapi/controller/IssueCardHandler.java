@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.misha.bankapi.model.Card;
 import org.misha.bankapi.service.CardService;
 
@@ -26,7 +27,19 @@ public class IssueCardHandler implements HttpHandler, ResponseSender {
         try {
             Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class); // Get java model from JSON
             cardService.insertCardInDatabase(card);
-        } catch (JsonMappingException | JsonParseException | SQLException ex) {
+        } catch (JsonMappingException ex) {
+            response = "Wrong number of parameters.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        } catch (JsonParseException ex) {
+            response = "Incorrect data.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        } catch (JdbcSQLIntegrityConstraintViolationException ex) {
+            response = "Card with this number doesn't exists.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        } catch (SQLException ex) {
             response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
             sendResponse(exchange, 400, response);
             return;

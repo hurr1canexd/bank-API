@@ -25,7 +25,8 @@ public class ViewCardsHandler implements HttpHandler, ResponseSender {
         try {
             arr = cardService.getCards();
         } catch (SQLException ex) {
-            sendResponse(exchange, 400, ex.getMessage().getBytes(StandardCharsets.UTF_8));
+            response = "Can not get cards.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
             return;
         }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.misha.bankapi.exception.AccountNotFoundException;
 import org.misha.bankapi.service.AccountService;
 
 import java.io.IOException;
@@ -30,8 +31,16 @@ public class MakeDepositHandler implements HttpHandler, ResponseSender {
             BigDecimal sum = node.get("sum").decimalValue();
 
             accountService.topUpAccountBalance(accountNumber, sum);
-        } catch (JsonMappingException | JsonParseException | SQLException ex) {
-            response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
+        } catch (JsonMappingException ex) {
+            response = "Wrong number of parameters.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        } catch (JsonParseException ex) {
+            response = "Incorrect data.".getBytes(StandardCharsets.UTF_8);
+            sendResponse(exchange, 400, response);
+            return;
+        } catch (AccountNotFoundException ex) {
+            response = "Account doesn't exists.".getBytes(StandardCharsets.UTF_8);
             sendResponse(exchange, 400, response);
             return;
         }

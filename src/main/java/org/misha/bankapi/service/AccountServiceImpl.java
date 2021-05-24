@@ -1,6 +1,7 @@
 package org.misha.bankapi.service;
 
 import org.misha.bankapi.db.DAO.AccountDAO;
+import org.misha.bankapi.exception.AccountNotFoundException;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void topUpAccountBalance(String accountNumber, BigDecimal sum) throws SQLException {
+    public void topUpAccountBalance(String accountNumber, BigDecimal sum) throws AccountNotFoundException {
         accountDAO.addMoney(accountNumber, sum);
     }
 

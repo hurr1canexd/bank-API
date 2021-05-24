@@ -43,7 +43,7 @@ public class CheckBalanceHandler implements HttpHandler, ResponseSender {
             return;
         }
         if (balance == null) {
-            sendResponse(exchange, 400, "Card doesn't exist".getBytes(StandardCharsets.UTF_8));
+            sendResponse(exchange, 400, "Account doesn't exist".getBytes(StandardCharsets.UTF_8));
             return;
         }
 
