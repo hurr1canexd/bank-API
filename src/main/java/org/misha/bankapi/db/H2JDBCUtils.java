@@ -16,7 +16,7 @@ public class H2JDBCUtils {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
+        
         return connection;
     }
 }

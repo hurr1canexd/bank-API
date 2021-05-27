@@ -9,13 +9,14 @@ import org.misha.bankapi.model.Card;
 import java.sql.*;
 
 public class CardDAOImpl implements CardDAO {
+    private final String createCardQuery = "INSERT INTO CARD (number, month, year, code, account_id) " +
+            "VALUES ( ?, ?, ?, ?, ?);";
+    private final String selectCardInfoQuery = "SELECT id, number from CARD;";
+
     @Override
     public void create(Card card) throws SQLException {
-        String query = "INSERT INTO CARD (number, month, year, code, accountid) " +
-                "VALUES ( ?, ?, ?, ?, ?);";
-
         try (Connection connection = H2JDBCUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(createCardQuery)) {
 
             statement.setString(1, card.getNumber());
             statement.setString(2, card.getMonth());
@@ -26,19 +27,20 @@ public class CardDAOImpl implements CardDAO {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            // log and throw custom exception
         }
 
     }
 
+    // List<Card>
     @Override
     public ArrayNode getCards() throws SQLException {
-        String query = "SELECT id, number from CARD;";
         ArrayNode arr = null;
 
         try (Connection connection = H2JDBCUtils.getConnection();
              Statement statement = connection.createStatement()) {
 
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(selectCardInfoQuery);
             ObjectMapper mapper = new ObjectMapper();
             arr = mapper.createArrayNode();
             while (rs.next()) {

@@ -1,8 +1,9 @@
 package org.misha.bankapi;
 
-import com.sun.net.httpserver.HttpServer;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.misha.bankapi.db.DBInitializer;
 
 import java.io.BufferedReader;
@@ -14,12 +15,18 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class IntegrationTest {
-    @Test
-    public void issueCardTest() throws IOException {
+    @BeforeAll
+    public static void setUp() throws IOException {
         DBInitializer.init();
         Main.ServerStarter.start();
+    }
 
-        final URL url = new URL("http://localhost:8080/order");
+    @Test
+    public void issueCardTest() throws IOException {
+//        DBInitializer.init();
+//        Main.ServerStarter.start();
+
+        final URL url = new URL("http://localhost:8080/card/order");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;");
@@ -57,32 +64,32 @@ public class IntegrationTest {
 
     @Test
     public void viewCardsTest() throws IOException {
-        DBInitializer.init();
-        Main.ServerStarter.start();
+//        Main.ServerStarter.start();
 
-        final URL url = new URL("http://localhost:8080/cards");
+        final URL url = new URL("http://localhost:8080/card/view");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setDoOutput(true);
 
-        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        final StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
+        String actual;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            final StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            actual = content.toString();
         }
-        in.close();
 
         String expected = "[ {  \"id\" : 1,  \"number\" : \"42024305346286324576\"} ]";
-        Assert.assertEquals(expected, content.toString());
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void makeDepositTest() throws IOException {
-        DBInitializer.init();
-        Main.ServerStarter.start();
+//        Main.ServerStarter.start();
 
-        final URL url = new URL("http://localhost:8080/pay");
+        final URL url = new URL("http://localhost:8080/account/pay");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;");
@@ -116,24 +123,24 @@ public class IntegrationTest {
 
     @Test
     public void checkBalanceTest() throws IOException {
-        DBInitializer.init();
-        Main.ServerStarter.start();
+//        Main.ServerStarter.start();
 
-        final URL url = new URL("http://localhost:8080/balance?number=40804810200003497183");
+        final URL url = new URL("http://localhost:8080/account/balance?number=40804810200003497183");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setDoOutput(true);
 
-        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        final StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
+        String actual;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            final StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            actual = content.toString();
         }
-        in.close();
 
         String expected = "0";
-        Assert.assertEquals(expected, content.toString());
+        Assert.assertEquals(expected, actual);
     }
-
 }

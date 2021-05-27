@@ -1,16 +1,10 @@
 package org.misha.bankapi;
 
 import com.sun.net.httpserver.HttpServer;
-import org.misha.bankapi.db.DAO.*;
 import org.misha.bankapi.controller.*;
-import org.misha.bankapi.db.DBInitializer;
-import org.misha.bankapi.service.*;
-import org.misha.bankapi.controller.CheckBalanceHandler;
-import org.misha.bankapi.controller.IssueCardHandler;
-import org.misha.bankapi.controller.MakeDepositHandler;
-import org.misha.bankapi.controller.ViewCardsHandler;
 import org.misha.bankapi.db.DAO.AccountDAOImpl;
 import org.misha.bankapi.db.DAO.CardDAOImpl;
+import org.misha.bankapi.db.DBInitializer;
 import org.misha.bankapi.service.AccountService;
 import org.misha.bankapi.service.AccountServiceImpl;
 import org.misha.bankapi.service.CardService;
@@ -34,10 +28,10 @@ public class Main {
             CardService cardService = new CardServiceImpl(new CardDAOImpl());
 
             // TODO: 18.05.2021 Проверять в контроллерах что приходит в запросе (метод, headers)
-            server.createContext("/order", new IssueCardHandler(cardService));
-            server.createContext("/cards", new ViewCardsHandler(cardService));
-            server.createContext("/pay", new MakeDepositHandler(accountService));
-            server.createContext("/balance", new CheckBalanceHandler(accountService));
+            server.createContext("/card/order", new CardHandler(cardService));
+            server.createContext("/card/view", new CardHandler(cardService));
+            server.createContext("/account/pay", new AccountHandler(accountService));
+            server.createContext("/account/balance", new AccountHandler(accountService));
 
             server.start();
         }

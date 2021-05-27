@@ -17,6 +17,7 @@ public class CardServiceImpl implements CardService {
         cardDAO.create(card);
     }
 
+    // List<CardInfo>
     @Override
     public ArrayNode getCards() throws SQLException {
         return cardDAO.getCards();

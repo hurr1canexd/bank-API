@@ -2,11 +2,13 @@ package org.misha.bankapi;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.misha.bankapi.db.DAO.AccountDAOImpl;
 import org.misha.bankapi.db.DAO.CardDAOImpl;
 import org.misha.bankapi.db.DBInitializer;
 import org.misha.bankapi.db.H2JDBCUtils;
 import org.misha.bankapi.model.Card;
+import org.misha.bankapi.model.Deposit;
 import org.misha.bankapi.service.AccountService;
 import org.misha.bankapi.service.AccountServiceImpl;
 import org.misha.bankapi.service.CardService;
@@ -20,10 +22,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UnitTest {
+    private final String getCardNumberQuery = "SELECT COUNT(*) AS total FROM Card";
+    private final String getBalanceQuery = "SELECT balance FROM Account WHERE number = '40804810200003497183';";
+
+    @BeforeAll
+    public static void setUp() throws IOException {
+        DBInitializer.init();
+    }
+
     @Test
     public void shouldInsertCardTest() throws IOException {
-        DBInitializer.init();
-
         Card card = new Card(
                 "42024305346286324586", "07", "2028", "242", BigDecimal.ZERO, 1);
         CardService cardService = new CardServiceImpl(new CardDAOImpl());
@@ -34,7 +42,6 @@ public class UnitTest {
         }
 
         int actual = 0;
-        String getCardNumberQuery = "SELECT COUNT(*) AS total FROM Card";
         try (Connection connection = H2JDBCUtils.getConnection();
              Statement statement = connection.createStatement()) {
 
@@ -48,12 +55,12 @@ public class UnitTest {
 
         int expected = 2;
         Assert.assertEquals(expected, actual);
+
+
     }
 
     @Test
     public void shouldViewCardsTest() throws IOException {
-        DBInitializer.init();
-
         String actual = "";
         CardService cardService = new CardServiceImpl(new CardDAOImpl());
         try {
@@ -68,13 +75,11 @@ public class UnitTest {
 
     @Test
     public void shouldMakeDepositTest() throws IOException {
-        DBInitializer.init();
-
         AccountService accountService = new AccountServiceImpl(new AccountDAOImpl());
-        accountService.topUpAccountBalance("40804810200003497183", BigDecimal.valueOf(250));
+        Deposit deposit = new Deposit("40804810200003497183", BigDecimal.valueOf(250));
+        accountService.topUpAccountBalance(deposit);
 
         BigDecimal actual = BigDecimal.ZERO;
-        String getBalanceQuery = "SELECT balance FROM Account WHERE number = '40804810200003497183';";
         try (Connection connection = H2JDBCUtils.getConnection();
              Statement statement = connection.createStatement()) {
 

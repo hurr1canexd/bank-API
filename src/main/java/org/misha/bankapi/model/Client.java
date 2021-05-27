@@ -10,8 +10,8 @@ public class Client {
     private String firstName;
     private String lastName;
 
-    public Client(@JsonProperty("firstName") String firstName,
-                  @JsonProperty("lastName") String lastName) {
+    public Client(@JsonProperty("first_name") String firstName,
+                  @JsonProperty("last_name") String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = counter.incrementAndGet();

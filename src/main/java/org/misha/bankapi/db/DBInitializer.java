@@ -9,10 +9,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBInitializer {
+    private static final String createScriptPath = "src/main/resources/scripts/create_db.sql";
+    private static final String fillDbScriptPath = "src/main/resources/scripts/fill_db.sql";
+
     public static void init() throws IOException {
-        String createQuery = Files.readString(Path.of("src/main/resources/scripts/create_db.sql"),
+        String createQuery = Files.readString(Path.of(createScriptPath),
                 StandardCharsets.US_ASCII);
-        String fillQuery = Files.readString(Path.of("src/main/resources/scripts/fill_db.sql"),
+        String fillQuery = Files.readString(Path.of(fillDbScriptPath),
                 StandardCharsets.US_ASCII);
 
         try (Connection connection = H2JDBCUtils.getConnection();

@@ -1,31 +1,32 @@
-CREATE TABLE Client
+CREATE TABLE IF NOT EXISTS Client
 (
-    id        INT IDENTITY (1,1) PRIMARY KEY,
-    firstName VARCHAR(30) NOT NULL,
-    lastName  VARCHAR(30) NOT NULL
+    id         INT IDENTITY (1,1) PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name  VARCHAR(30) NOT NULL
 );
 
 
-CREATE TABLE Account
-(
-    id       INT IDENTITY (1,1) PRIMARY KEY,
-    number   VARCHAR(20) NOT NULL,
-    balance  DECIMAL,
-    clientId INT         NOT NULL,
-    FOREIGN KEY (clientId) REFERENCES Client (id)
-);
-CREATE UNIQUE index account_number_UINDEX ON Account (number);
-
-CREATE TABLE Card
+CREATE TABLE IF NOT EXISTS Account
 (
     id        INT IDENTITY (1,1) PRIMARY KEY,
-    number    VARCHAR(20) NOT NULL,
-    month     VARCHAR(2)  NOT NULL, -- VARCHAR(2)
-    year      VARCHAR(4)  NOT NULL, -- VARCHAR(4)
-    code      VARCHAR(3),
+    number    VARCHAR(20) NOT NULL UNIQUE,
     balance   DECIMAL,
-    status    INT DEFAULT 0,
-    accountId INT         NOT NULL,
-    FOREIGN KEY (accountId) REFERENCES Account (id)
+    client_id INT         NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES Client (id)
 );
-CREATE UNIQUE index card_number_UINDEX ON Card (number);
+-- CREATE UNIQUE index account_number_UINDEX ON Account (number);
+
+
+CREATE TABLE IF NOT EXISTS Card
+(
+    id         INT IDENTITY (1,1) PRIMARY KEY,
+    number     VARCHAR(20) NOT NULL UNIQUE,
+    month      VARCHAR(2)  NOT NULL, -- VARCHAR(2)
+    year       VARCHAR(4)  NOT NULL, -- VARCHAR(4)
+    code       VARCHAR(3),
+    balance    DECIMAL,
+    status     INT DEFAULT 0,
+    account_id INT         NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES Account (id)
+);
+-- CREATE UNIQUE index card_number_UINDEX ON Card (number);
