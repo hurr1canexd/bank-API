@@ -4,15 +4,19 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
-import org.misha.bankapi.model.Card;
+import org.misha.bankapi.model.CardInfo;
+import org.misha.bankapi.model.CardRequest;
 import org.misha.bankapi.service.CardService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.List;
 
 public class CardHandler implements HttpHandler, ResponseSender {
     private final CardService cardService;
@@ -28,11 +32,9 @@ public class CardHandler implements HttpHandler, ResponseSender {
             // View all cards
             if (exchange.getRequestURI().getPath().equals("/card/view")) {
                 byte[] response;
-                ArrayNode arr;
-
-                // Get cards as array of JSON objects
+                List<CardInfo> infos;
                 try {
-                    arr = cardService.getCards();
+                    infos = cardService.getCards();
                 } catch (SQLException ex) {
                     response = "Can not get cards.".getBytes(StandardCharsets.UTF_8);
                     sendResponse(exchange, 500, response);
@@ -40,6 +42,15 @@ public class CardHandler implements HttpHandler, ResponseSender {
                 }
 
                 // If all works correctly
+                // TODO: отправлять как-то нормальный JSON сразу не перегоняя в ArrayNode
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode arr = mapper.createArrayNode();
+                for (CardInfo info : infos) {
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("id", info.getId());
+                    node.put("number", info.getNumber());
+                    arr.add(node);
+                }
                 response = arr.toPrettyString().getBytes(StandardCharsets.UTF_8);
                 sendResponse(exchange, 200, response);
             }
@@ -51,8 +62,10 @@ public class CardHandler implements HttpHandler, ResponseSender {
                 byte[] response;
 
                 try {
-                    Card card = new ObjectMapper().readValue(exchange.getRequestBody(), Card.class); // Get java model from JSON
-                    cardService.insertCardInDatabase(card);
+                    // Get java model from JSON
+                    InputStream requestBody = exchange.getRequestBody();
+                    CardRequest cardRequest = new ObjectMapper().readValue(requestBody, CardRequest.class);
+                    cardService.insertCardInDatabase(cardRequest);
                 } catch (JsonMappingException ex) {
                     response = "Wrong number of parameters.".getBytes(StandardCharsets.UTF_8);
                     sendResponse(exchange, 400, response);

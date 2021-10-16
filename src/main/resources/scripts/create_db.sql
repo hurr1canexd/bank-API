@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS Card
 (
     id         INT IDENTITY (1,1) PRIMARY KEY,
     number     VARCHAR(20) NOT NULL UNIQUE,
-    month      VARCHAR(2)  NOT NULL, -- VARCHAR(2)
-    year       VARCHAR(4)  NOT NULL, -- VARCHAR(4)
+    month      VARCHAR(2)  NOT NULL,
+    year       VARCHAR(4)  NOT NULL,
     code       VARCHAR(3),
     balance    DECIMAL,
     status     INT DEFAULT 0,

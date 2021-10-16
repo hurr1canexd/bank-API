@@ -3,16 +3,18 @@ package org.misha.bankapi;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.misha.bankapi.db.DAO.AccountDAOImpl;
-import org.misha.bankapi.db.DAO.CardDAOImpl;
+import org.misha.bankapi.db.DAO.impl.AccountDAOImpl;
+import org.misha.bankapi.db.DAO.impl.CardDAOImpl;
 import org.misha.bankapi.db.DBInitializer;
 import org.misha.bankapi.db.H2JDBCUtils;
+import org.misha.bankapi.exception.AccountNotFoundException;
 import org.misha.bankapi.model.Card;
+import org.misha.bankapi.model.CardRequest;
 import org.misha.bankapi.model.Deposit;
 import org.misha.bankapi.service.AccountService;
-import org.misha.bankapi.service.AccountServiceImpl;
+import org.misha.bankapi.service.impl.AccountServiceImpl;
 import org.misha.bankapi.service.CardService;
-import org.misha.bankapi.service.CardServiceImpl;
+import org.misha.bankapi.service.impl.CardServiceImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,11 +34,11 @@ public class UnitTest {
 
     @Test
     public void shouldInsertCardTest() throws IOException {
-        Card card = new Card(
-                "42024305346286324586", "07", "2028", "242", BigDecimal.ZERO, 1);
+        CardRequest cardRq = new CardRequest(
+                "42024305346286324586", "07", "2028", BigDecimal.ZERO, 1);
         CardService cardService = new CardServiceImpl(new CardDAOImpl());
         try {
-            cardService.insertCardInDatabase(card);
+            cardService.insertCardInDatabase(cardRq);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -103,7 +105,7 @@ public class UnitTest {
         BigDecimal actual = null;
         try {
             actual = accountService.getAccountBalance("40804810200003497183");
-        } catch (SQLException ex) {
+        } catch (AccountNotFoundException ex) {
             ex.printStackTrace();
         }
 

@@ -51,7 +51,7 @@ public class AccountHandler implements HttpHandler, ResponseSender {
                 String accountNumber = arr[1];
                 try {
                     balance = accountService.getAccountBalance(accountNumber);
-                } catch (SQLException ex) {
+                } catch (AccountNotFoundException ex) {
                     response = ex.getMessage().getBytes(StandardCharsets.UTF_8);
                     sendResponse(exchange, 500, response);
                     return;

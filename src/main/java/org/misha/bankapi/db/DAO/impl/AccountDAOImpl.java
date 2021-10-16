@@ -1,5 +1,6 @@
-package org.misha.bankapi.db.DAO;
+package org.misha.bankapi.db.DAO.impl;
 
+import org.misha.bankapi.db.DAO.AccountDAO;
 import org.misha.bankapi.db.H2JDBCUtils;
 import org.misha.bankapi.exception.AccountNotFoundException;
 
@@ -27,14 +28,13 @@ public class AccountDAOImpl implements AccountDAO {
             if (rowsChanged == 0) {
                 throw new AccountNotFoundException();
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
     @Override
-    public BigDecimal getBalance(String accountNumber) {
+    public BigDecimal getBalance(String accountNumber) throws AccountNotFoundException {
         BigDecimal balance = null;
 
         try (Connection connection = H2JDBCUtils.getConnection();
@@ -51,6 +51,7 @@ public class AccountDAOImpl implements AccountDAO {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            throw new AccountNotFoundException();
         }
 
         return balance;

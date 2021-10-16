@@ -1,11 +1,12 @@
 package org.misha.bankapi.service;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.misha.bankapi.model.Card;
+import org.misha.bankapi.model.CardInfo;
+import org.misha.bankapi.model.CardRequest;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface CardService {
-    void insertCardInDatabase(Card card) throws SQLException;
-    ArrayNode getCards() throws SQLException;
+    void insertCardInDatabase(CardRequest cardRequest) throws SQLException;
+    List<CardInfo> getCards() throws SQLException;
 }
