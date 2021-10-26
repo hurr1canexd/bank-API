@@ -3,20 +3,15 @@ package org.misha.bankapi.controller;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.misha.bankapi.exception.AccountNotFoundException;
-import org.misha.bankapi.model.Card;
 import org.misha.bankapi.model.Deposit;
 import org.misha.bankapi.service.AccountService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 
 public class AccountHandler implements HttpHandler, ResponseSender {
     private final AccountService accountService;
@@ -34,7 +29,7 @@ public class AccountHandler implements HttpHandler, ResponseSender {
                 byte[] response;
 
                 // Get an account number from URL
-                // TODO split by & before this
+                // TODO split by & before this | util method?
                 String[] arr = exchange.getRequestURI().getQuery().split("=");
                 if (arr.length < 2) {
                     response = "Incorrect query.".getBytes(StandardCharsets.UTF_8);

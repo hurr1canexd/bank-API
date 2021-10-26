@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
+/**
+ * Class request to top up an account balance
+ */
 public class Deposit {
     private final String accountNumber;
     private final BigDecimal sum;

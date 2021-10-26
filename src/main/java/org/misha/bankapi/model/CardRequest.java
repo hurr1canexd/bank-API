@@ -11,12 +11,11 @@ public final class CardRequest {
     private final BigDecimal balance;
     private final int accountId;
 
-    public CardRequest(
-            @JsonProperty("number") String number,
-            @JsonProperty("month") String month,
-            @JsonProperty("year") String year,
-            @JsonProperty("balance") BigDecimal balance,
-            @JsonProperty("account_id") int accountId) {
+    public CardRequest(@JsonProperty("number") String number,
+                       @JsonProperty("month") String month,
+                       @JsonProperty("year") String year,
+                       @JsonProperty("balance") BigDecimal balance,
+                       @JsonProperty("account_id") int accountId) {
         this.number = number;
         this.month = month;
         this.year = year;

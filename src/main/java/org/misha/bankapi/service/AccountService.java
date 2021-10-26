@@ -9,4 +9,5 @@ import java.sql.SQLException;
 public interface AccountService {
     void topUpAccountBalance(Deposit deposit) throws AccountNotFoundException;
     BigDecimal getAccountBalance(String accountNumber) throws AccountNotFoundException;
+    boolean accountExists(String accountNumber);
 }

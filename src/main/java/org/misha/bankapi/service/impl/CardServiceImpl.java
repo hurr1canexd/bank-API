@@ -1,6 +1,7 @@
 package org.misha.bankapi.service.impl;
 
 import org.misha.bankapi.db.DAO.CardDAO;
+import org.misha.bankapi.exception.SuchCardExistsException;
 import org.misha.bankapi.model.Card;
 import org.misha.bankapi.model.CardInfo;
 import org.misha.bankapi.model.CardRequest;
@@ -18,7 +19,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void insertCardInDatabase(CardRequest cardRq) throws SQLException {
+    public void insertCardInDatabase(CardRequest cardRq) throws SuchCardExistsException {
         // TODO: 27.05.2021 Map CardRequest to Card
         Card card = new Card(
                 cardRq.getNumber(),
@@ -28,6 +29,9 @@ public class CardServiceImpl implements CardService {
                 cardRq.getBalance(),
                 cardRq.getAccountId()
         );
+        if (!cardExists(card)) {
+            throw new SuchCardExistsException();
+        }
         // Then set generated fields from service:
         // card.setPin(generatePin());
         // TODO: check if same card exists
@@ -35,10 +39,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardInfo> getCards() throws SQLException {
+    public List<CardInfo> getCards() {
         List<Card> cards = cardDAO.getCards();
         return cards.stream()
                 .map(card -> new CardInfo(card.getId(), card.getNumber()))
                 .collect(Collectors.toList());
+    }
+
+    private boolean cardExists(Card card) {
+        return cardDAO.getCards().contains(card);
     }
 }

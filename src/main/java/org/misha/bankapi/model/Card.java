@@ -3,11 +3,12 @@ package org.misha.bankapi.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Card {
     private static final AtomicInteger counter = new AtomicInteger(0);
-    public final @JsonProperty("id") int id;
+    public final @JsonProperty("id") int id; // todo ???
     private final String number;
     private final String month;
     private final String year;
@@ -63,5 +64,19 @@ public class Card {
 
     public int getAccountId() {
         return accountId;
+    }
+
+    // todo: подумать про то какие поля будут входить
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return number.equals(card.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
     }
 }
